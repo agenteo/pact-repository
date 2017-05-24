@@ -55,8 +55,9 @@
                         "operator_name": "Ocean",
                         "price": 2000.22,
                         "offer_start_date": "2012-03-02T08:00:00.000Z",
+                        "members_price": 1799.99,
                         "offer_end_date": "2014-07-01T03:59:59.999Z",
-                        "destination_name": "Cancun",
+                        "destination_name": "Mantova",
                         "uuid": "c5195583-ff66-454f-babb-77d8d8b6e463",
                         "status": "OK"
                     }
@@ -80,6 +81,9 @@
                     },
                     "$.body[*].status": {
                         "regex": "NEW|OK|ENDING"
+                    },
+                    "$.body[*].members_price": {
+                        "match": "decimal"
                     },
                     "$.body[*].operator_name": {
                         "regex": ".*"
