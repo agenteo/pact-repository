@@ -1,0 +1,103 @@
+{
+    "provider": {
+        "name": "seal_API"
+    },
+    "consumer": {
+        "name": "aggregator_app"
+    },
+    "interactions": [
+        {
+            "description": "OAuth endpoint returns ok when given correct input",
+            "request": {
+                "method": "POST",
+                "path": "/oauth/token",
+                "headers": {
+                    "Authorization": "Basic base64 encoded clientid+clientsecret",
+                    "Content-Type": "application/x-www-form-urlencoded"
+                },
+                "query": "grant_type=client_credentials",
+                "matchingRules": {
+                    "$.headers.Authorization": {
+                        "regex": "Basic .*"
+                    }
+                }
+            },
+            "response": {
+                "status": 200,
+                "headers": {
+                    "Content-Type": "application/json; charset=utf-8"
+                },
+                "body": {
+                    "access_token": "e72e16c7e42f292c6912e7710c838347ae178b4a",
+                    "token_type": "Bearer"
+                },
+                "matchingRules": {
+                    "$.body.access_token": {
+                        "regex": "\\w*"
+                    }
+                }
+            },
+            "providerState": "OAuth endpoints"
+        },
+        {
+            "description": "A request for all offers",
+            "request": {
+                "method": "GET",
+                "path": "/api/v1/offers"
+            },
+            "response": {
+                "status": 200,
+                "headers": {
+                    "Content-Type": "application/json; charset=utf-8"
+                },
+                "body": [
+                    {
+                        "operator_name": "Ocean",
+                        "price": 2000.22,
+                        "offer_start_date": "2012-03-02T08:00:00.000Z",
+                        "offer_end_date": "2014-07-01T03:59:59.999Z",
+                        "destination_name": "Cancun",
+                        "uuid": "c5195583-ff66-454f-babb-77d8d8b6e463",
+                        "status": "OK"
+                    }
+                ],
+                "matchingRules": {
+                    "$.body[*].offer_start_date": {
+                        "regex": ".*"
+                    },
+                    "$.body[*].offer_end_date": {
+                        "regex": ".*"
+                    },
+                    "$.body[*].uuid": {
+                        "regex": "(\\w|-)*"
+                    },
+                    "$.body": {
+                        "min": 0,
+                        "match": "type"
+                    },
+                    "$.body[*].price": {
+                        "match": "decimal"
+                    },
+                    "$.body[*].status": {
+                        "regex": "NEW|OK|ENDING"
+                    },
+                    "$.body[*].operator_name": {
+                        "regex": ".*"
+                    },
+                    "$.body[*].destination_name": {
+                        "regex": ".*"
+                    }
+                }
+            },
+            "providerState": "There are available travel offers"
+        }
+    ],
+    "metadata": {
+        "pact-specification": {
+            "version": "2.0.0"
+        },
+        "pact-jvm": {
+            "version": "3.3.9"
+        }
+    }
+}
